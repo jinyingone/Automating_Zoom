@@ -1,70 +1,52 @@
 import os
+import sys
 import pandas as pd
 import pyautogui
 import time
 from datetime import datetime
 
+def startWemeetApp():
+    work_dir = os.path.dirname(sys.argv[0])
 
-def signIn(meeting_id,password):
-
-    #Open's Zoom Application from the specified location
-    os.startfile("C:/Users/facadmin1/AppData/Roaming/Zoom/bin/Zoom.exe")
+    btn=pyautogui.locateCenterOnScreen(work_dir+"/renwulan.png")
+    if btn == None:
+        os.startfile("C:/Program Files (x86)/Tencent/WeMeet/wemeetapp.exe")
+    else:
+        clickImage(work_dir+"/renwulan.png")
     time.sleep(3)
 
-    #Click's join button
-    joinbtn=pyautogui.locateCenterOnScreen("joinameeting.png")
+def clickImage(image_path):
+    btn=pyautogui.locateCenterOnScreen(image_path)
+    print(image_path + ":" + str(btn))
+    pyautogui.moveTo(btn)
+    pyautogui.click()
+
+def jiaRuHuiYi(meeting_id,password):
+    startWemeetApp()
+
+    joinbtn=pyautogui.locateCenterOnScreen("jiaruhuiyi.png")
     pyautogui.moveTo(joinbtn)
     pyautogui.click()
     time.sleep(1)
 
-    #Type the meeting id
-    meetingidbtn=pyautogui.locateCenterOnScreen("meetingid.png")
-    pyautogui.moveTo(meetingidbtn)
-    pyautogui.write(meeting_id)
-    time.sleep(2)
+def kuaiSuHuiYi():
+    work_dir = os.path.dirname(sys.argv[0])
+    startWemeetApp()
 
-    #To turn of video and audio
-    mediaBtn=pyautogui.locateAllOnScreen("media.png")
-    for btn in mediaBtn:
-        pyautogui.moveTo(btn)
-        pyautogui.click()
-        time.sleep(1)
-
-    #To join
-    join=pyautogui.locateCenterOnScreen("join.png")
-    pyautogui.moveTo(join)
-    pyautogui.click()
-    time.sleep(2)
-
-    #Enter's passcode to join meeting
-    passcode=pyautogui.locateCenterOnScreen("meetingPasscode.png")
-    pyautogui.moveTo(passcode)
-    pyautogui.write(password)
+    clickImage(work_dir+"/kuaisuhuiyi.png")
     time.sleep(1)
 
-    #Click's on join button
-    joinmeeting=pyautogui.locateCenterOnScreen("joinmeeting.png")
-    pyautogui.moveTo(joinmeeting)
-    pyautogui.click()
+def jieShuHuiYi():
+    work_dir = os.path.dirname(sys.argv[0])
+    startWemeetApp()
+    
+    clickImage(work_dir+"/jieshuhuiyi1.png")
+    time.sleep(1)
+    clickImage(work_dir+"/jieshuhuiyi2.png")
     time.sleep(1)
 
-df = pd.read_excel('timings.xlsx',index=False)
 
-while True:
-    #To get current time
-    now = datetime.now().strftime("%H:%M")
-    if now in str(df['Timings']):
-        
-        mylist=df["Timings"]
-        mylist=[i.strftime("%H:%M") for i in mylist]
-        c= [i for i in range(len(mylist)) if mylist[i]==now]
-        row = df.loc[c] 
-        meeting_id = str(row.iloc[0,1])  
-        password= str(row.iloc[0,2])  
-        time.sleep(5)
-        signIn(meeting_id, password)
-        time.sleep(2)
-        print('signed in')
-        break
-        
-        
+#jiaRuHuiYi("meeting_id", "password")
+
+kuaiSuHuiYi()
+jieShuHuiYi()
